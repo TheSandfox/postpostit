@@ -1,0 +1,17 @@
+.postPostIt {
+	overflow: hidden;
+	position: relative;
+	width: 100vw;
+	height: 100vh;
+}
+
+.post {
+	position: absolute;
+	background-color: #fc0;
+	transform-origin: 50% 50%;
+	scale: 0;
+	transition: 0.15s ease;
+	&.active {
+		scale:1;
+	}
+}
