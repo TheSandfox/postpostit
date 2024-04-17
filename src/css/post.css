@@ -1,17 +1,64 @@
 .postPostIt {
+	color: var(--color-dark);
 	overflow: hidden;
 	position: relative;
 	width: 100vw;
 	height: 100vh;
+	background-color: var(--color-light);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&>.postPostItHeader {
+		font-size: 64px;
+		text-align: center;
+		padding: 64px;
+		filter: drop-shadow(4px 4px 0 #0003);
+		user-select: none;
+		white-space: nowrap;/*글자를 한줄로 모아준다*/
+		overflow: hidden;
+		z-index: 8193;
+		pointer-events: none;
+	}
+	&>.postPostItInput {
+		min-width:128px;
+		position: fixed;
+		bottom: 32px;
+		padding: 8px;
+		z-index: 8192;
+		display: flex;
+		background-color: #fff;
+		&>.input {
+			font-size: 32px;
+			outline: none;
+			border: none;
+			background: none;
+		}
+	}
+	&>.postPostItRefresh {
+		position: fixed;
+		bottom: 32px;
+		right: 32px;
+		z-index: 8192
+	}
 }
 
 .post {
 	position: absolute;
-	background-color: #fc0;
 	transform-origin: 50% 50%;
+	left:0;
+	top:0;
 	scale: 0;
-	transition: 0.15s ease;
+	transition: scale 0.15s ease;
+	padding: 16px;
 	&.active {
 		scale:1;
+	}
+	&>.content {
+		margin-bottom: 32px;
+	}
+	&>.date {
+		font-size:10px;
+		width:100%;
+		text-align: right;
 	}
 }

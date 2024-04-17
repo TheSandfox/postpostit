@@ -8,10 +8,16 @@ router.get('/test',(req,res)=>{
 })
 
 router.get('/get',(req,res)=>{
-	const postsPerPage = 50;
 	let page = req.query.page;
-	db.getPosts(page,postsPerPage,(posts)=>{
+	let threshold = req.query.threshold;
+	db.getPosts(page,threshold,(posts)=>{
 		res.send(JSON.parse(JSON.stringify(posts)));
+	})
+})
+
+router.get('/getNew',(req,res)=>{
+	db.getNewPost((post)=>{
+		res.send(JSON.parse(JSON.stringify(post)));
 	})
 })
 
@@ -25,10 +31,18 @@ router.get('/create',(req,res)=>{
 	)
 })
 
-router.get('/clear',(req,res)=>{
-	db.clearPosts(
-		()=>{
-			res.send('삭제해버렸구만..')
+// router.get('/clear',(req,res)=>{
+// 	db.clearPosts(
+// 		()=>{
+// 			res.send('삭제해버렸구만..')
+// 		}
+// 	)
+// })
+
+router.get('/count',(req,res)=>{
+	db.countPosts(
+		(val)=>{
+			res.send(String(val)+'개')
 		}
 	)
 })

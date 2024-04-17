@@ -7,6 +7,18 @@ var connection = mysql.createConnection({
 	dateStrings	: 'date'
 });
 
+function countPosts(callback) {
+	connection.query(
+		`
+		SELECT COUNT(*) FROM post
+		`
+		,(err,val)=>{
+			if(err) throw err;
+			callback(val['COUNT(*)']);
+		}
+	)
+}
+
 function getPosts(page,postsPerPage,callback) {
 	connection.query(
 		`
@@ -15,6 +27,18 @@ function getPosts(page,postsPerPage,callback) {
 		,(err,posts)=>{
 			if(err) throw err;
 			callback(posts);
+		}
+	)
+}
+
+function getNewPost(callback) {
+	connection.query(
+		`
+		SELECT * FROM post ORDER BY id DESC LIMIT 1
+		`
+		,(err,post)=>{
+			if(err) throw err;
+			callback(post);
 		}
 	)
 }
@@ -46,5 +70,7 @@ function clearPosts(callback) {
 module.exports = {
 	getPosts,
 	createPost,
-	clearPosts
+	clearPosts,
+	countPosts,
+	getNewPost
 }
