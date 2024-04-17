@@ -7,6 +7,12 @@ var connection = mysql.createConnection({
 	dateStrings	: 'date'
 });
 
+function replaceEscape(raw) {
+	let rs = raw.replaceAll(`\\`,`\\\\`);
+	rs = rs.replaceAll(`\'`,`\\'`);
+	return rs;
+}
+
 function countPosts(callback) {
 	connection.query(
 		`
@@ -44,8 +50,7 @@ function getNewPost(callback) {
 }
 
 function createPost(content,callback) {
-	content = content.replaceAll(`\\`,`\\\\`);
-	content = content.replaceAll(`\'`,`\\'`);
+	content = replaceEscape(content);
 	connection.query(
 		`
 		INSERT INTO post(content,date) VALUES('${content}',NOW())
