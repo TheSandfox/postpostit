@@ -5,7 +5,7 @@ import 'css/index.css';
 import Post from 'component/Post';
 import PostPostItInput from 'component/PostPostItInput';
 
-const THRESHOLD = 200;
+const THRESHOLD = 50;
 
 function shuffle(array) {
 	for (let i = array.length - 1; i > 0; i--) {
@@ -49,7 +49,10 @@ export default function PostPostIt({max}) {
 	})
 	//포스트잇들 가져오기(최초에&리프레시버튼 입력시)
 	useEffect(()=>{
+		//추가포스트 비워주기
 		setAdditionalPosts([]);
+		additionalPostsRef.current = [];
+		//랜덤포스트 가져오기 요청
 		async function getPosts(page) {
 			await axios.get('http://localhost:3001/api/get',{params:{page:page,threshold:THRESHOLD}})
 			.then((res)=>{
@@ -59,6 +62,7 @@ export default function PostPostIt({max}) {
 			.catch()
 		}
 		getPosts(parseInt(Math.random()*parseInt(max/THRESHOLD)));
+		//클린업
 		return ()=>{}
 	},[max,refresher]);
 	//인풋 엔터 시 리스트갱신

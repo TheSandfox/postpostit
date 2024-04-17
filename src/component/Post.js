@@ -12,6 +12,7 @@ function isTouchDevice() {
 }
 
 function setElementPosition(element,x,y) {
+	// console.log(`${x}, ${y}`);
 	element.style.transform = `translate(${x}px,${y}px)`;
 	// element.style.left = `${x}px`;
 	// element.style.top = `${y}px`;
@@ -52,6 +53,7 @@ export default function Post({post,delay,maxOrder,windowSize}) {
 
 		let el = element.current;
 		el.style.zIndex = getMaxOrder.current();
+		addMaxOrder.current();
 
 		//다운
 		const mouseDownCallback = (event)=>{
@@ -138,12 +140,15 @@ export default function Post({post,delay,maxOrder,windowSize}) {
 	useEffect(()=>{
 
 		let el = element.current;
-		let xpos = position.current[0] / windowSize[1][0];
-		let ypos = position.current[1] / windowSize[1][1];
+		let xpos = position.current[0] / (windowSize[1][0]-width);
+		let ypos = position.current[1] / (windowSize[1][1]-width);
+
+		if(isNaN(xpos)){xpos=0;}
+		if(isNaN(ypos)){ypos=0;}
 
 		position.current = [
-			xpos * windowSize[0][0],
-			ypos * windowSize[0][1]
+			xpos * (windowSize[0][0]-width),
+			ypos * (windowSize[0][1]-width)
 		]
 		
 		setElementPosition(el,position.current[0],position.current[1]);

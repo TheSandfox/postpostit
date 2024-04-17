@@ -16,7 +16,7 @@ function countPosts(callback) {
 			if(err) throw err;
 			callback(val['COUNT(*)']);
 		}
-	)
+	);
 }
 
 function getPosts(page,postsPerPage,callback) {
@@ -28,7 +28,7 @@ function getPosts(page,postsPerPage,callback) {
 			if(err) throw err;
 			callback(posts);
 		}
-	)
+	);
 }
 
 function getNewPost(callback) {
@@ -40,10 +40,12 @@ function getNewPost(callback) {
 			if(err) throw err;
 			callback(post);
 		}
-	)
+	);
 }
 
 function createPost(content,callback) {
+	content = content.replaceAll(`\\`,`\\\\`);
+	content = content.replaceAll(`\'`,`\\'`);
 	connection.query(
 		`
 		INSERT INTO post(content,date) VALUES('${content}',NOW())
@@ -52,7 +54,7 @@ function createPost(content,callback) {
 			if(err) throw err;
 			callback();
 		}
-	)
+	);
 }
 
 function clearPosts(callback) {
@@ -64,7 +66,7 @@ function clearPosts(callback) {
 			if(err) throw err;
 			callback();
 		}
-	)
+	);
 }
 
 module.exports = {

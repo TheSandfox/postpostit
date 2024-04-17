@@ -7,6 +7,7 @@ export default function PostPostItInput({newPostRefresh}) {
 		(event)=>{
 			let inputVal = '';
 			if (event.keyCode!==13) {return;}
+			if (event.isShift) {return;}
 			inputVal = event.target.value.trim();
 			console.log(inputVal);
 			event.target.value = '';
@@ -23,6 +24,6 @@ export default function PostPostItInput({newPostRefresh}) {
 	);
 
 	return <div className="postPostItInput dotbox">
-		<input className="input fontBitBit" type="text" onKeyUp={enterCallback.current}></input>
+		<input className="input fontBitBit" type="text" onKeyDown={enterCallback.current}></input>
 	</div>;
 }
