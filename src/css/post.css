@@ -8,7 +8,16 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	&>.postPostItBody {
+		width:100%;
+		height:100%;
+		transition: 0.5s ease;
+		&.blur {
+			filter: blur(4px);
+		}
+	}
 	&>.postPostItHeader {
+		position: absolute;
 		font-size: 64px;
 		text-align: center;
 		padding: 64px;

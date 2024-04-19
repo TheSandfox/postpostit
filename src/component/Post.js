@@ -140,8 +140,16 @@ export default function Post({post,delay,maxOrder,windowSize}) {
 	useEffect(()=>{
 
 		let el = element.current;
-		let xpos = position.current[0] / (windowSize[1][0]-width);
-		let ypos = position.current[1] / (windowSize[1][1]-width);
+		let divisorX = (windowSize[1][0]-width);
+		let divisorY = (windowSize[1][1]-width);
+
+		if(Math.abs(divisorX)<=1){divisorX=Math.sign(divisorX);}
+		if(Math.abs(divisorY)<=1){divisorY=Math.sign(divisorY);}
+		if(divisorX===0.){divisorX=1.}
+		if(divisorY===0.){divisorY=1.}
+
+		let xpos = position.current[0] / divisorX;
+		let ypos = position.current[1] / divisorY;
 
 		if(isNaN(xpos)){xpos=0;}
 		if(isNaN(ypos)){ypos=0;}

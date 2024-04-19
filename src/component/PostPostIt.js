@@ -42,11 +42,27 @@ export default function PostPostIt({max}) {
 	const additionalPostsRef = useRef([]);
 	const [newPostRefresher,newPostRefresh] = useState([]);
 	const [refresher,refresh] = useState([]);
+	const [blurState,setBlurState] = useState([true]);
+	const [blurStateRefresher,blurStateRefresh] = useState([]);
 	//
 	const refreshPosts = useRef(()=>{
 		setPosts([]);
 		refresh([]);
 	})
+	const handleBlurState = {
+		get:()=>{
+			return blurState[0];
+		},
+		set:(val)=>{
+			let arr = [];
+			arr.push(val);
+			setBlurState(arr);
+		}
+	}
+	const awakeBody = useRef(()=>{
+		handleBlurState.set(false);
+		blurStateRefresh([]);
+	});
 	//포스트잇들 가져오기(최초에&리프레시버튼 입력시)
 	useEffect(()=>{
 		//추가포스트 비워주기
@@ -82,6 +98,7 @@ export default function PostPostIt({max}) {
 				.catch();
 			}
 			getNewPost();
+			awakeBody.current();
 		}
 		return ()=>{}
 	},[newPostRefresher])
@@ -112,26 +129,38 @@ export default function PostPostIt({max}) {
 			window.removeEventListener('resize',resizeCallback);
 		}
 	},[])
+	//블러 타임아웃
+	useEffect(()=>{
+		console.log('타이머작동');
+		const timer = setTimeout(()=>{
+			handleBlurState.set(true);
+		},2500);
+		return ()=>{
+			clearTimeout(timer);
+		}
+	},[blurStateRefresher]);
 	return <div className="postPostIt fontBitBit">
 		<h1 className="postPostItHeader">Post Post It!</h1>
-		{posts.map((post,index)=>{
-			return <Post 
-				post={post} 
-				key={index} 
-				delay={index*popInterval+popInterval} 
-				maxOrder={maxOrder}
-				windowSize={windowSize}
-			/>
-		})}
-		{additionalPosts.map((post,index)=>{
-			return <Post
-				post={post}
-				key={'a'+index} 
-				delay={popInterval} 
-				maxOrder={maxOrder}
-				windowSize={windowSize}
-			/>
-		})}
+		<div className={'postPostItBody '+(handleBlurState.get()?'blur':'')}>
+			{posts.map((post,index)=>{
+				return <Post 
+					post={post} 
+					key={index} 
+					delay={index*popInterval+popInterval} 
+					maxOrder={maxOrder}
+					windowSize={windowSize}
+				/>
+			})}
+			{additionalPosts.map((post,index)=>{
+				return <Post
+					post={post}
+					key={'a'+index} 
+					delay={popInterval} 
+					maxOrder={maxOrder}
+					windowSize={windowSize}
+				/>
+			})}
+		</div>
 		<PostPostItInput
 			newPostRefresh={newPostRefresh}
 		/>
