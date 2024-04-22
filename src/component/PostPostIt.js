@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 
@@ -16,8 +17,8 @@ function shuffle(array) {
 	return array;
 }
 
-function PostPostItRefresh({refresh}){
-	return <div className="postPostItRefresh" onClick={()=>{refresh([])}}>
+function PostPostItRefresh({postRefresh}){
+	return <div className="postPostItRefresh" onClick={()=>{postRefresh([])}}>
 		새로고침
 	</div>
 }
@@ -26,6 +27,7 @@ export default function PostPostIt({max}) {
 	const popInterval = 0.025;
 	const initial = useRef(true);
 	const maxOrder = useRef(1);
+	//
 	const [windowSize,setWindowSize] = useState([
 		/*new*/[
 			window.innerWidth,
@@ -37,18 +39,15 @@ export default function PostPostIt({max}) {
 		]
 	])
 	const windowSizeRef = useRef([window.innerWidth,window.innerHeight]);
+	//
 	const [posts,setPosts] = useState([]);
 	const [additionalPosts,setAdditionalPosts] = useState([]);
 	const additionalPostsRef = useRef([]);
 	const [newPostRefresher,newPostRefresh] = useState([]);
-	const [refresher,refresh] = useState([]);
+	const [postRefresher,postRefresh] = useState([]);
 	const [blurState,setBlurState] = useState([true]);
 	const [blurStateRefresher,blurStateRefresh] = useState([]);
 	//
-	const refreshPosts = useRef(()=>{
-		setPosts([]);
-		refresh([]);
-	})
 	const handleBlurState = {
 		get:()=>{
 			return blurState[0];
@@ -59,12 +58,17 @@ export default function PostPostIt({max}) {
 			setBlurState(arr);
 		}
 	}
+	//블러필터 비활성화
 	const awakeBody = useRef(()=>{
 		handleBlurState.set(false);
 		blurStateRefresh([]);
 	});
 	//포스트잇들 가져오기(최초에&리프레시버튼 입력시)
 	useEffect(()=>{
+		//블러 비활성
+		awakeBody.current();
+		//포스트 비워주기
+		setPosts([]);
 		//추가포스트 비워주기
 		setAdditionalPosts([]);
 		additionalPostsRef.current = [];
@@ -80,7 +84,7 @@ export default function PostPostIt({max}) {
 		getPosts(parseInt(Math.random()*parseInt(max/THRESHOLD)));
 		//클린업
 		return ()=>{}
-	},[max,refresher]);
+	},[max,postRefresher]);
 	//인풋 엔터 시 리스트갱신
 	useEffect(()=>{
 		if (initial.current) {
@@ -131,7 +135,7 @@ export default function PostPostIt({max}) {
 	},[])
 	//블러 타임아웃
 	useEffect(()=>{
-		console.log('타이머작동');
+		// console.log('타이머작동');
 		const timer = setTimeout(()=>{
 			handleBlurState.set(true);
 		},2500);
@@ -139,6 +143,7 @@ export default function PostPostIt({max}) {
 			clearTimeout(timer);
 		}
 	},[blurStateRefresher]);
+	//리턴 컴포넌트
 	return <div className="postPostIt fontBitBit">
 		<h1 className="postPostItHeader">Post Post It!</h1>
 		<div className={'postPostItBody '+(handleBlurState.get()?'blur':'')}>
@@ -149,6 +154,7 @@ export default function PostPostIt({max}) {
 					delay={index*popInterval+popInterval} 
 					maxOrder={maxOrder}
 					windowSize={windowSize}
+					awakeBody={awakeBody.current}
 				/>
 			})}
 			{additionalPosts.map((post,index)=>{
@@ -158,6 +164,7 @@ export default function PostPostIt({max}) {
 					delay={popInterval} 
 					maxOrder={maxOrder}
 					windowSize={windowSize}
+					awakeBody={awakeBody.current}
 				/>
 			})}
 		</div>
@@ -165,7 +172,8 @@ export default function PostPostIt({max}) {
 			newPostRefresh={newPostRefresh}
 		/>
 		<PostPostItRefresh
-			refresh={refreshPosts.current}
+			postRefresh={postRefresh}
+			// refreshPosts.current();awakeBody.current()
 		/>
 	</div>;
 }

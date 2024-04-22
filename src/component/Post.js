@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { useEffect, useRef } from "react";
 
 const POST_COLORS = [
@@ -18,7 +19,7 @@ function setElementPosition(element,x,y) {
 	// element.style.top = `${y}px`;
 }
 
-export default function Post({post,delay,maxOrder,windowSize}) {
+export default function Post({post,delay,maxOrder,windowSize,awakeBody}) {
 	const width = 256;
 	const position = useRef([
 		Math.random()*(windowSize[0][0]-width),
@@ -30,6 +31,7 @@ export default function Post({post,delay,maxOrder,windowSize}) {
 	const element = useRef();
 	const style = {
 		width:`${width}px`,
+		transform:`translate(${position.current[0]}px,${position.current[1]}px)`
 	}
 	const getMaxOrder = useRef(()=>maxOrder.current);
 	const addMaxOrder = useRef(()=>maxOrder.current=maxOrder.current+1);
@@ -74,6 +76,7 @@ export default function Post({post,delay,maxOrder,windowSize}) {
 				}
 			}
 			// console.log("AAAA");
+			awakeBody();
 			el.style.zIndex = getMaxOrder.current();
 			addMaxOrder.current();
 			selected.current = true;
@@ -99,6 +102,7 @@ export default function Post({post,delay,maxOrder,windowSize}) {
 				xvec = event.movementX;
 				yvec = event.movementY;
 			}
+			awakeBody();
 			position.current = [
 				position.current[0] + xvec,
 				position.current[1] + yvec

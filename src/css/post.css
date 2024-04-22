@@ -57,7 +57,7 @@
 	left:0;
 	top:0;
 	scale: 0;
-	transition: scale 0.15s ease;
+	/* transition: scale 0.15s ease; */
 	padding: 16px;
 	&.active {
 		scale:1;
