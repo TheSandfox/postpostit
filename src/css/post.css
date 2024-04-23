@@ -57,10 +57,12 @@
 	left:0;
 	top:0;
 	scale: 0;
-	/* transition: scale 0.15s ease; */
+	transition: scale 0.15s ease;
 	padding: 16px;
 	&.active {
 		scale:1;
+		animation-name: post-anim1;
+		animation-duration: 0.15s;
 	}
 	&>.content {
 		margin-bottom: 32px;
@@ -70,4 +72,13 @@
 		width:100%;
 		text-align: right;
 	}
+}
+
+
+
+/* result디스플레이 스케일링 */
+@keyframes post-anim1 {
+	0% {transform:scale(0.0);}
+	50% {transform:scale(1.55);}
+	100% {transform:scale(1.0);}
 }

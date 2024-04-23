@@ -14,9 +14,9 @@ function isTouchDevice() {
 
 function setElementPosition(element,x,y) {
 	// console.log(`${x}, ${y}`);
-	element.style.transform = `translate(${x}px,${y}px)`;
-	// element.style.left = `${x}px`;
-	// element.style.top = `${y}px`;
+	// element.style.transform = `translate(${x}px,${y}px)`;
+	element.style.left = `${x}px`;
+	element.style.top = `${y}px`;
 }
 
 export default function Post({post,delay,maxOrder,windowSize,awakeBody}) {
@@ -31,7 +31,9 @@ export default function Post({post,delay,maxOrder,windowSize,awakeBody}) {
 	const element = useRef();
 	const style = {
 		width:`${width}px`,
-		transform:`translate(${position.current[0]}px,${position.current[1]}px)`
+		// transform:`translate(${position.current[0]}px,${position.current[1]}px)`
+		left:`${position.current[0]}px`,
+		top:`${position.current[1]}px`
 	}
 	const getMaxOrder = useRef(()=>maxOrder.current);
 	const addMaxOrder = useRef(()=>maxOrder.current=maxOrder.current+1);
