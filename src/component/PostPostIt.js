@@ -42,7 +42,6 @@ export default function PostPostIt({max}) {
 	//
 	const [posts,setPosts] = useState([]);
 	const [additionalPosts,setAdditionalPosts] = useState([]);
-	const additionalPostsRef = useRef([]);
 	const [newPostRefresher,newPostRefresh] = useState([]);
 	const [postRefresher,postRefresh] = useState([]);
 	const [blurState,setBlurState] = useState([true]);
@@ -71,7 +70,6 @@ export default function PostPostIt({max}) {
 		setPosts([]);
 		//추가포스트 비워주기
 		setAdditionalPosts([]);
-		additionalPostsRef.current = [];
 		//랜덤포스트 가져오기 요청
 		async function getPosts(page) {
 			await axios.get('http://localhost:3001/api/get',{params:{page:page,threshold:THRESHOLD}})
@@ -93,11 +91,10 @@ export default function PostPostIt({max}) {
 			async function getNewPost() {
 				await axios.get('http://localhost:3001/api/getNew')
 				.then((res)=>{
-					additionalPostsRef.current.push(res.data[0]);
-					// console.log(res.data[0]);
-					// console.log(JSON.parse(JSON.stringify(additionalPostsRef.current)));
-					setAdditionalPosts(JSON.parse(JSON.stringify(additionalPostsRef.current)));
-					// setAdditionalPosts(JSON.parse(JSON.stringify(additionalPosts.push(res.data[0]))))
+					setAdditionalPosts([
+						...additionalPosts,
+						res.data[0]
+					])
 				})
 				.catch();
 			}
@@ -110,14 +107,24 @@ export default function PostPostIt({max}) {
 	useEffect(()=>{
 
 		const resizeCallback = (event)=>{
+			console.log(windowSize[0][0])
+			console.log(windowSize[0][1])
+			console.log(windowSizeRef.current[0])
+			console.log(windowSizeRef.current[1])
+			let oldX = windowSize[0][0]
+			let oldY = windowSize[0][1]
 			setWindowSize([
 				/*new*/[
 					window.innerWidth,
 					window.innerHeight
 				],
 				/*old*/[
+					// windowSize[0][0],
+					// windowSize[0][1]
 					windowSizeRef.current[0],
 					windowSizeRef.current[1],
+					// oldX,
+					// oldY
 				]
 			])
 			windowSizeRef.current = [
@@ -150,7 +157,7 @@ export default function PostPostIt({max}) {
 			{posts.map((post,index)=>{
 				return <Post 
 					post={post} 
-					key={index} 
+					key={post.id} 
 					delay={index*popInterval+popInterval} 
 					maxOrder={maxOrder}
 					windowSize={windowSize}
@@ -160,7 +167,7 @@ export default function PostPostIt({max}) {
 			{additionalPosts.map((post,index)=>{
 				return <Post
 					post={post}
-					key={'a'+index} 
+					key={'a'+post.id} 
 					delay={popInterval} 
 					maxOrder={maxOrder}
 					windowSize={windowSize}
